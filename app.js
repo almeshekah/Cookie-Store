@@ -12,14 +12,16 @@ const db = require("./db/models");
 //res.json(products);
 //});
 
-app.get("/products" , async(req , res )=>{
+/*app.get("/products" , async(req , res )=>{
     try{
         const _products=await products.findAll();
         res.json(_products);
     }catch(error){
-        res.json({message:error.message});
+        res.json({message:error})
     }
-});
+
+    
+});*/
 
 
 app.get("/products/:productId", (req , res) => {
@@ -51,7 +53,19 @@ app.post("/products", (req,res)=>{
     res.status(201).json(req.body);
 });
 
-db.sequelize.sync();
+const run = async () => {
+    try {
+      await db.sequelize.authenticate();
+      console.log("Connection to the database successful!");
+      await app.listen(8000, () => {
+        console.log("The application is running on localhost:8000");
+      });
+    } catch (error) {
+      console.error("Error connecting to the database: ", error);
+    }
+  };
+  
+run();
 
 
 app.listen(8000, () => {
